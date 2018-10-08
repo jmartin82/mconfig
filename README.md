@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/jmartin82/cnfgo.svg?branch=master)](https://travis-ci.org/jmartin82/cnfgo)
-
+[![codecov](https://codecov.io/gh/jmartin82/cnfgo/branch/master/graph/badge.svg)](https://codecov.io/gh/jmartin82/cnfgo)
 # cnfgo
 
 cnfgo is a lightweight Golang library for integrating configs files like (json, yml, toml) and environment variables into one config struct.
