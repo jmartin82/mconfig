@@ -11,7 +11,7 @@ build:
 test: 
 		$(GOTEST) -v ./...
 coverage: 
-		$(GOTEST) -cover  -coverprofile=coverage.out ./...
+		$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic ./...
 clean: 
 		$(GOCLEAN)
 		rm -f $(BINARY_NAME)
@@ -19,5 +19,4 @@ run:
 		$(GOBUILD) -o $(BINARY_NAME) -v ./...
 		./$(BINARY_NAME)
 deps:
-		$(GOGET) github.com/markbates/goth
-		$(GOGET) github.com/markbates/pop
+		curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh

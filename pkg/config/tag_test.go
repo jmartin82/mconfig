@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"testing"
 
 	"github.com/go-test/deep"
@@ -121,11 +120,4 @@ func TestEnvTagParser_Parse(t *testing.T) {
 
 		})
 	}
-}
-
-func setTestEnv(envMap map[string]string) {
-	for k, val := range envMap {
-		os.Setenv(k, val)
-	}
-
 }

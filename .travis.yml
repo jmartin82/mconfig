@@ -1,0 +1,14 @@
+language: go
+go: 
+  - "1.10"
+
+install:
+  - make deps
+  - dep ensure
+
+script:
+  - make test
+  - make coverage
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

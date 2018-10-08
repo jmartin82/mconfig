@@ -1,6 +1,10 @@
 package config
 
-import "github.com/subosito/gotenv"
+import (
+	"os"
+
+	"github.com/subosito/gotenv"
+)
 
 type EnvFileReader interface {
 	Load(filenames ...string) error
@@ -14,5 +18,12 @@ type GotEnvAdapter struct {
 }
 
 func (gea *GotEnvAdapter) Load(filenames ...string) error {
-	return gotenv.Load(filenames...)
+	for _, file := range filenames {
+		if _, err := os.Stat(file); err == nil {
+			if err := gotenv.Load(file); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

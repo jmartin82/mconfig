@@ -44,8 +44,11 @@ func (etp *EnvTagParser) Parse(configuration interface{}, deep int) {
 
 		}
 
-		value := os.Getenv(envName)
-		etp.set(kind, field, value, false)
+		envVar, present := os.LookupEnv(envName)
+		if present {
+			etp.set(kind, field, envVar, false)
+		}
+
 	}
 
 }

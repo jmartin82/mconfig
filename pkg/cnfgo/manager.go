@@ -1,10 +1,11 @@
-package config
+package cnfgo
 
 import (
 	"errors"
 	"io/ioutil"
 	"reflect"
 
+	"github.com/jmartin82/cnfgo/pkg/config"
 	"github.com/jmartin82/cnfgo/pkg/files"
 )
 
@@ -15,12 +16,12 @@ var (
 
 type ManagerFacade struct {
 	unmarshalers  []files.Unmarshaler
-	envFileReader EnvFileReader
-	envTagParser  *EnvTagParser
+	envFileReader config.EnvFileReader
+	envTagParser  *config.EnvTagParser
 	envFiles      []string
 }
 
-func (p *ManagerFacade) SetEnvFileReader(envFileReader EnvFileReader) {
+func (p *ManagerFacade) SetEnvFileReader(envFileReader config.EnvFileReader) {
 	p.envFileReader = envFileReader
 }
 
@@ -44,14 +45,8 @@ func (p *ManagerFacade) getUnmarshaler(filename string) (files.Unmarshaler, erro
 	return nil, errors.New("Not valid config file reader")
 }
 
-func isPtrToStruct(configuration interface{}) bool {
-	refValue := reflect.ValueOf(configuration)
-	typ := refValue.Type()
-	return typ.Kind() != reflect.Ptr || typ.Elem().Kind() != reflect.Struct
-}
-
 func NewManager() *ManagerFacade {
-	envTagParser := NewEnvTagParser("env")
+	envTagParser := config.NewEnvTagParser("env")
 	envFiles := []string{}
 	unmarshalers := []files.Unmarshaler{}
 
@@ -63,13 +58,18 @@ func getDefaultManager() *ManagerFacade {
 	managerFacade.AddFileUnmashaler(files.NewJSONFormatUnmarshaler())
 	managerFacade.AddFileUnmashaler(files.NewYAMLFormatUnmarshaler())
 	managerFacade.AddFileUnmashaler(files.NewTOMLFormatUnmarshaler())
-	managerFacade.SetEnvFileReader(NewGotEnvAdapter())
+	managerFacade.SetEnvFileReader(config.NewGotEnvAdapter())
 	managerFacade.SetEnvFiles(".env")
 	return managerFacade
 }
 
 var Manager *ManagerFacade = getDefaultManager()
 
+func isPtrToStruct(configuration interface{}) bool {
+	refValue := reflect.ValueOf(configuration)
+	typ := refValue.Type()
+	return typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct
+}
 func ReadFromEnvironment(configuration interface{}) error {
 
 	if !isPtrToStruct(configuration) {
@@ -79,6 +79,7 @@ func ReadFromEnvironment(configuration interface{}) error {
 	if err := Manager.loadEnvFile(); err != nil {
 		return err
 	}
+
 	Manager.envTagParser.Parse(configuration, 0)
 	return nil
 }
@@ -105,7 +106,7 @@ func ReadFromFile(filename string, configuration interface{}) (err error) {
 	return unmarshaler.Unmarshal(source, configuration)
 }
 
-func Get(filename string, configuration interface{}) (err error) {
+func Parse(filename string, configuration interface{}) (err error) {
 
 	if err := ReadFromFile(filename, configuration); err != nil {
 		return err
