@@ -36,6 +36,47 @@ func (p *ManagerFacade) loadEnvFile() error {
 	return p.envFileReader.Load(p.envFiles...)
 }
 
+func (p *ManagerFacade) isPtrToStruct(configuration interface{}) bool {
+	refValue := reflect.ValueOf(configuration)
+	typ := refValue.Type()
+	return typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct
+}
+func (p *ManagerFacade) ReadFromEnvironment(configuration interface{}) error {
+
+	if !p.isPtrToStruct(configuration) {
+		return ErrNotAStructPtr
+	}
+
+	if err := p.loadEnvFile(); err != nil {
+		return err
+	}
+
+	p.envTagParser.Parse(configuration, 0)
+	return nil
+}
+
+func (p *ManagerFacade) ReadFromFile(filename string, configuration interface{}) (err error) {
+	if len(filename) == 0 {
+		return ErrFileNotFound
+	}
+
+	if !p.isPtrToStruct(configuration) {
+		return ErrNotAStructPtr
+	}
+
+	unmarshaler, err := p.getUnmarshaler(filename)
+	if err != nil {
+		return err
+	}
+
+	source, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	return unmarshaler.Unmarshal(source, configuration)
+}
+
 func (p *ManagerFacade) getUnmarshaler(filename string) (files.Unmarshaler, error) {
 	for _, unmarshaler := range p.unmarshalers {
 		if unmarshaler.IsCapable(filename) {
@@ -63,55 +104,14 @@ func getDefaultManager() *ManagerFacade {
 	return managerFacade
 }
 
-var Manager *ManagerFacade = getDefaultManager()
-
-func isPtrToStruct(configuration interface{}) bool {
-	refValue := reflect.ValueOf(configuration)
-	typ := refValue.Type()
-	return typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct
-}
-func ReadFromEnvironment(configuration interface{}) error {
-
-	if !isPtrToStruct(configuration) {
-		return ErrNotAStructPtr
-	}
-
-	if err := Manager.loadEnvFile(); err != nil {
-		return err
-	}
-
-	Manager.envTagParser.Parse(configuration, 0)
-	return nil
-}
-
-func ReadFromFile(filename string, configuration interface{}) (err error) {
-	if len(filename) == 0 {
-		return ErrFileNotFound
-	}
-
-	if !isPtrToStruct(configuration) {
-		return ErrNotAStructPtr
-	}
-
-	unmarshaler, err := Manager.getUnmarshaler(filename)
-	if err != nil {
-		return err
-	}
-
-	source, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-
-	return unmarshaler.Unmarshal(source, configuration)
-}
+var ConfigManager *ManagerFacade = getDefaultManager()
 
 func Parse(filename string, configuration interface{}) (err error) {
 
-	if err := ReadFromFile(filename, configuration); err != nil {
+	if err := ConfigManager.ReadFromFile(filename, configuration); err != nil {
 		return err
 	}
-	if err := ReadFromEnvironment(configuration); err != nil {
+	if err := ConfigManager.ReadFromEnvironment(configuration); err != nil {
 		return err
 	}
 

@@ -34,7 +34,8 @@ func TestReadFromFile(t *testing.T) {
 	defer removeTestFiles([]string{"config.json"})
 	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
 	configuration := &Configuration{}
-	ReadFromFile("config.json", configuration)
+	m := getDefaultManager()
+	m.ReadFromFile("config.json", configuration)
 
 	expected := &Configuration{
 		Port: 3001,
@@ -83,7 +84,8 @@ func TestReadFromEnvironment(t *testing.T) {
 	defer removeTestFiles([]string{".env"})
 
 	configuration := &Configuration{}
-	ReadFromEnvironment(configuration)
+	m := getDefaultManager()
+	m.ReadFromEnvironment(configuration)
 
 	expected := &Configuration{
 		Port: 3001,
@@ -109,36 +111,39 @@ func TestReadFromNotRegistreProvider(t *testing.T) {
 	defer removeTestFiles([]string{"config.xml"})
 	ioutil.WriteFile("config.xml", []byte(""), 0644)
 	configuration := &Configuration{}
-	if err := ReadFromFile("config.xml", configuration); err == nil {
+	m := getDefaultManager()
+	if err := m.ReadFromFile("config.xml", configuration); err == nil {
 		t.Errorf("Expected error reading file without provider")
 	}
 }
 
 func TestInvalidConfigInput(t *testing.T) {
 	configuration := Configuration{}
-	if err := ReadFromEnvironment(configuration); err == nil {
+	m := getDefaultManager()
+	if err := m.ReadFromEnvironment(configuration); err == nil {
 		t.Errorf("Expected error when input is not pointer to struct")
 	}
 
 	defer removeTestFiles([]string{"config.json"})
 	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
-	ReadFromFile("config.json", configuration)
+	m.ReadFromFile("config.json", configuration)
 }
 
 func TestInvalidFileName(t *testing.T) {
 	configuration := &Configuration{}
-	if err := ReadFromFile("", configuration); err == nil {
+	m := getDefaultManager()
+	if err := m.ReadFromFile("", configuration); err == nil {
 		t.Errorf("File should fail if is empty")
 	}
-
-	if err := ReadFromFile("dssddsf.json", configuration); err == nil {
+	if err := m.ReadFromFile("dssddsf.json", configuration); err == nil {
 		t.Errorf("File should fail if doesn't exist")
 	}
 }
 
 func TestOKIfNotFoundEnvFilename(t *testing.T) {
 	configuration := &Configuration{}
-	if err := ReadFromEnvironment(configuration); err != nil {
+	m := getDefaultManager()
+	if err := m.ReadFromEnvironment(configuration); err != nil {
 		t.Errorf("File .env can not exists, Error: %s", err)
 	}
 }
