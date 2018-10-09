@@ -165,25 +165,13 @@ type Unmarshaler interface {
 	Unmarshal(source []byte, configuration interface{}) error
 }
 ```
-
-```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
-
-configuration := Configuration{}
-cnfgo.ConfigManager..AddFileUnmashaler(NewXMLFormatUnmarshaler())
-err := cnfgo.Parse("config.yaml", &configuration)
-if err != nil {
-	panic(err)
-}
-```
-
 Code:
 
 ```golang
 import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
 
 configuration := Configuration{}
-cnfgo.ConfigManager..AddFileUnmashaler(NewXMLFormatUnmarshaler())
+cnfgo.ConfigManager.AddFileUnmashaler(NewXMLFormatUnmarshaler())
 err := cnfgo.Parse("config.yaml", &configuration)
 if err != nil {
 	panic(err)
