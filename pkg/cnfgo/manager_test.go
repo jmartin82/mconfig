@@ -1,4 +1,4 @@
-package cnfgo
+package mconfig
 
 import (
 	"bufio"
@@ -32,7 +32,7 @@ type Configuration struct {
 func TestReadFromFile(t *testing.T) {
 
 	defer removeTestFiles([]string{"config.json"})
-	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
+	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"mconfig\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
 	configuration := &Configuration{}
 	m := getDefaultManager()
 	m.ReadFromFile("config.json", configuration)
@@ -43,7 +43,7 @@ func TestReadFromFile(t *testing.T) {
 			Host:     "192.168.0.1",
 			Username: "root",
 			Password: "test",
-			Database: "cnfgo",
+			Database: "mconfig",
 			Port:     3306,
 		},
 		Redis: RedisConfiguration{
@@ -74,7 +74,7 @@ func TestReadFromEnvironment(t *testing.T) {
 		"TEST_MYSQL_HOST=192.168.0.1",
 		"TEST_MYSQL_USERNAME=root",
 		"TEST_MYSQL_PASSWORD=test",
-		"TEST_MYSQL_DATABASE=cnfgo",
+		"TEST_MYSQL_DATABASE=mconfig",
 		"TEST_MYSQL_PORT=3306",
 		"TEST_REDIS_HOST=localhost",
 		"TEST_REDIS_PORT=6379",
@@ -93,7 +93,7 @@ func TestReadFromEnvironment(t *testing.T) {
 			Host:     "192.168.0.1",
 			Username: "root",
 			Password: "test",
-			Database: "cnfgo",
+			Database: "mconfig",
 			Port:     3306,
 		},
 		Redis: RedisConfiguration{
@@ -125,7 +125,7 @@ func TestInvalidConfigInput(t *testing.T) {
 	}
 
 	defer removeTestFiles([]string{"config.json"})
-	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
+	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"mconfig\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
 	m.ReadFromFile("config.json", configuration)
 }
 
@@ -155,7 +155,7 @@ func TestInvalidEnvFileFormat(t *testing.T) {
 	})
 
 	defer removeTestFiles([]string{"config.json", ".env"})
-	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
+	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"mconfig\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
 	if err := Parse("config.json", configuration); err == nil {
 		t.Errorf("File should fail env file is not valid")
 	}
@@ -179,7 +179,7 @@ func TestParse(t *testing.T) {
 	})
 
 	defer removeTestFiles([]string{".env", "config.json"})
-	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"cnfgo\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
+	ioutil.WriteFile("config.json", []byte("{\"Port\":3001,\"Mysql\":{\"Host\":\"192.168.0.1\",\"Username\":\"root\",\"Password\":\"test\",\"Database\":\"mconfig\",\"Port\":3306},\"Redis\":{\"Host\":\"localhost\",\"Port\":6379}}"), 0644)
 
 	configuration := &Configuration{}
 	Parse("config.json", configuration)
@@ -190,7 +190,7 @@ func TestParse(t *testing.T) {
 			Host:     "192.168.0.1",
 			Username: "root",
 			Password: "super_secret",
-			Database: "cnfgo",
+			Database: "mconfig",
 			Port:     3306,
 		},
 		Redis: RedisConfiguration{

@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/jmartin82/cnfgo.svg?branch=master)](https://travis-ci.org/jmartin82/cnfgo)
-[![codecov](https://codecov.io/gh/jmartin82/cnfgo/branch/master/graph/badge.svg)](https://codecov.io/gh/jmartin82/cnfgo)
-# cnfgo
+[![Build Status](https://travis-ci.org/jmartin82/mconfig.svg?branch=master)](https://travis-ci.org/jmartin82/mconfig)
+[![codecov](https://codecov.io/gh/jmartin82/mconfig/branch/master/graph/badge.svg)](https://codecov.io/gh/jmartin82/mconfig)
+# mconfig
 
-cnfgo is a lightweight Golang library for integrating configs files like (json, yml, toml) and environment variables into one config struct.
+mconfig is a lightweight Golang library for integrating configs files like (json, yml, toml) and environment variables into one config struct.
 
 ## Features
 * Load multiple types of files (yaml, json, toml).
@@ -51,7 +51,7 @@ Mysql:
   Host: 192.168.0.1
   Username: root
   Password: test
-  Database: cnfgo
+  Database: mconfig
   Port: 3306
 Redis:
   Host: localhost
@@ -61,10 +61,10 @@ Redis:
 From your code:
 
 ```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
+import 	"github.com/jmartin82/mconfig/pkg/mconfig"
 
 configuration := Configuration{}
-err := cnfgo.Parse("config.yaml", &configuration)
+err := mconfig.Parse("config.yaml", &configuration)
 if err != nil {
 	panic(err)
 }
@@ -119,10 +119,10 @@ But if you don't want the full feature call, you always can use the facade to ad
 Read only env vars from your system and load into your config struct.
 
 ```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
+import 	"github.com/jmartin82/mconfig/pkg/mconfig"
 
 configuration := Configuration{}
-err := cnfgo.ConfigManager.ReadFromEnvironment(&configuration);
+err := mconfig.ConfigManager.ReadFromEnvironment(&configuration);
 if err != nil {
 	panic(err)
 }
@@ -131,10 +131,10 @@ if err != nil {
 Read only the config from a toml.
 
 ```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
+import 	"github.com/jmartin82/mconfig/pkg/mconfig"
 
 configuration := Configuration{}
-err := cnfgo.ConfigManager.ReadFromFile("config.toml", &configuration)
+err := mconfig.ConfigManager.ReadFromFile("config.toml", &configuration)
 if err != nil {
 	panic(err)
 }
@@ -143,11 +143,11 @@ if err != nil {
 Use differnt files to load the enviroment variables.
 
 ```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
+import 	"github.com/jmartin82/mconfig/pkg/mconfig"
 
 configuration := Configuration{}
-cnfgo.ConfigManager.SetEnvFiles("enviroment.txt","env.txt")
-err := cnfgo.Parse("config.yaml", &configuration)
+mconfig.ConfigManager.SetEnvFiles("enviroment.txt","env.txt")
+err := mconfig.Parse("config.yaml", &configuration)
 if err != nil {
 	panic(err)
 }
@@ -168,11 +168,11 @@ type Unmarshaler interface {
 Code:
 
 ```golang
-import 	"github.com/jmartin82/cnfgo/pkg/cnfgo"
+import 	"github.com/jmartin82/mconfig/pkg/mconfig"
 
 configuration := Configuration{}
-cnfgo.ConfigManager.AddFileUnmashaler(NewXMLFormatUnmarshaler())
-err := cnfgo.Parse("config.yaml", &configuration)
+mconfig.ConfigManager.AddFileUnmashaler(NewXMLFormatUnmarshaler())
+err := mconfig.Parse("config.yaml", &configuration)
 if err != nil {
 	panic(err)
 }

@@ -1,12 +1,12 @@
-package cnfgo
+package mconfig
 
 import (
 	"errors"
 	"io/ioutil"
 	"reflect"
 
-	"github.com/jmartin82/cnfgo/pkg/config"
-	"github.com/jmartin82/cnfgo/pkg/files"
+	"github.com/jmartin82/mconfig/pkg/config"
+	"github.com/jmartin82/mconfig/pkg/files"
 )
 
 var (
