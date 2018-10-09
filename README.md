@@ -102,9 +102,9 @@ type TestTypes struct {
 	PtrIsString  *string  `env:"FOO_VAR"`
 	PtrIsFloat32 *float32 `env:"FOO_VAR"`
 	PtrIsFloat64 *float64 `env:"FOO_VAR"`
-    PtrIsBool    *bool    `env:"FOO_VAR"`
-    Struct       struct
-    PtrStruct    *struct
+        PtrIsBool    *bool    `env:"FOO_VAR"`
+        Struct       struct
+        PtrStruct    *struct
 }
 ```
 
