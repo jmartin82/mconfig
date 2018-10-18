@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	ErrNotAStructPtr = errors.New("Configuration should be a pointer to a struct type")
-	ErrFileNotFound  = errors.New("Configuration file doesn't exist")
+	ErrNotAStructPtr        = errors.New("configuration should be a pointer to a struct type")
+	ErrFileNotFound         = errors.New("configuration file doesn't exist")
+	ErrNotValidConfigReader = errors.New("not valid config file reader")
 )
 
 type ManagerFacade struct {
@@ -83,7 +84,7 @@ func (p *ManagerFacade) getUnmarshaler(filename string) (files.Unmarshaler, erro
 			return unmarshaler, nil
 		}
 	}
-	return nil, errors.New("Not valid config file reader")
+	return nil, ErrNotValidConfigReader
 }
 
 func NewManager() *ManagerFacade {
