@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/jmartin82/mconfig.svg?branch=master)](https://travis-ci.org/jmartin82/mconfig)
 [![codecov](https://codecov.io/gh/jmartin82/mconfig/branch/master/graph/badge.svg)](https://codecov.io/gh/jmartin82/mconfig)
-# mconfig
+# Mconfig
 
-mconfig is a lightweight Golang library for integrating configs files like (json, yml, toml) and environment variables into one config struct.
+Mconfig is a lightweight Golang library for integrating configs files like (json, yml, toml) and environment variables into one config struct.
 
 ## Features
 * Load multiple types of files (yaml, json, toml).
@@ -17,7 +17,7 @@ mconfig is a lightweight Golang library for integrating configs files like (json
 
 ## Usage
 
-Config is designed to be very simple and straightforward to use. All you can do with it is load configurations to a predifined struct.
+Mconfig is designed to be very simple and straightforward to use. All you can do with it is load configurations to a predifined struct.
 
 First define a configuration structure:
 
@@ -116,7 +116,7 @@ By default only the Parse function it's exposed. With that, you can read json, y
 
 But if you don't want the full feature call, you always can use the facade to adjust the functionality to your necessities.
 
-Read only env vars from your system and load into your config struct.
+Read-only env vars from your system and load into your config struct.
 
 ```golang
 import 	"github.com/jmartin82/mconfig/pkg/mconfig"
@@ -182,3 +182,10 @@ if err != nil {
 
 * Only the exposed fields can be setted via file config or enviroment variable.
 * The config struct should be a pointer.
+
+
+### Licence
+
+Copyright © 2018 - 2018, Jordi Martín (http://jordi.io)
+
+Released under MIT license, see [LICENSE](LICENSE.md) for details.
